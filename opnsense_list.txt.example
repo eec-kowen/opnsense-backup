@@ -1,0 +1,21 @@
+# OPNsense firewalls to back up, one per line. Lines starting with # are ignored.
+#
+#   <name>  <base URL>  [tls]
+#
+# name  Short label: [A-Za-z0-9._-]. The backup is saved as config_<name>.xml and
+#       the API key is read from $API_KEY_DIR/<name>.txt.
+# URL   https://host[:port] of the web GUI / API.
+# tls   How to trust the GUI certificate:
+#         sha256//<base64>   pin the certificate's public key (best for the default
+#                            self-signed cert; survives a renewal that keeps the key)
+#         ca:/path/ca.pem    verify against a CA file (hostname must match the cert)
+#         system             verify against the system CA store (default)
+#         insecure           no verification (not recommended)
+#
+# Get a pin with:
+#   echo | openssl s_client -connect HOST:443 2>/dev/null | openssl x509 -pubkey -noout \
+#     | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64
+#
+# Example:
+# fw1   https://192.0.2.1        sha256//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+# fw2   https://fw2.example.com  system
